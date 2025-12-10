@@ -46,3 +46,8 @@ logs/
 
 test_recording.wav
 debug_gemini_models.py
+
+test_wake_30s.py
+test_wake.py
+test_wakeword.py
+test_wakeword_only.py

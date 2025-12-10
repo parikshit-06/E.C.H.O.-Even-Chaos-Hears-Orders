@@ -1,5 +1,6 @@
 from .config import load_config
 
+
 def main() -> None:
     import sys
     config = load_config()
@@ -17,13 +18,19 @@ def main() -> None:
             run_hotkey_listener(config)
             return
 
-    # default behavior
+        if mode == "wake":
+            from .runtime.wake_listener import run_wake_listener
+            run_wake_listener(config)
+            return
+
     print("[Echo Assistant] Available modes:")
-    print("  python -m echo_assistant.main voice-demo   # continuous loop mode")
-    print("  python -m echo_assistant.main hotkey       # press Ctrl+Space to talk")
+    print("  python -m echo_assistant.main voice-demo   # continuous 4s loop")
+    print("  python -m echo_assistant.main hotkey       # Ctrl+Space to talk")
+    print("  python -m echo_assistant.main wake         # wake-word (Porcupine) mode")
     print()
     print("Current config:")
     print(config)
+
 
 if __name__ == "__main__":
     main()
