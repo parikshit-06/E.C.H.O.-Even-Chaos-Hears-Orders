@@ -27,14 +27,19 @@ class WakeWordConfig:
 
 class WakeWordDetector:
     def __init__(self, config: WakeWordConfig) -> None:
+        # Store original model names BEFORE passing to Model()
+        # because Model() might modify them
+        self.original_model_names = config.model_names.copy() if config.model_names else None
         self.config = config
+        # Override config.model_names with original names to ensure consistent comparison
+        self.config.model_names = self.original_model_names
 
         # One-time download of pre-trained models (no account needed)
         openwakeword.utils.download_models()
 
         # Load specified models, or all if None
         self.model = Model(
-            wakeword_models=self.config.model_names or None,
+            wakeword_models=self.original_model_names or None,
             # you can add vad_threshold here later if needed
         )
 
@@ -49,7 +54,7 @@ class WakeWordDetector:
 
         print(
             f"[WakeWord] Using openWakeWord models: "
-            f"{self.config.model_names or 'ALL'}; threshold={self.config.threshold}"
+            f"{self.original_model_names or 'ALL'}; threshold={self.config.threshold}"
         )
     
     def _smooth_score(self, name: str, score: float) -> float:
