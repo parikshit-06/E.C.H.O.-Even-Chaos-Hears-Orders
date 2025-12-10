@@ -6,22 +6,22 @@ A powerful, modular voice-activated AI assistant built with Python. E.C.H.O. pro
 ![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
-## ✨ Features
+## Features
 
-### 🎤 Voice Interaction
+### Voice Interaction
 - **Wake-word detection** using openWakeWord ("hey Jarvis")
 - **Hotkey activation** (Ctrl+Space) for instant interaction
 - **Local speech-to-text** with Faster Whisper (offline capable)
 - **Text-to-speech** with pyttsx3 (cross-platform)
 
-### 🤖 AI Intelligence
+### AI Intelligence
 - **Multiple LLM backends**:
   - Perplexity AI (default) - Real-time web-connected reasoning
   - Google Gemini - Advanced multimodal AI
 - **Conversational context** - Remembers conversation flow
 - **Smart routing** - Delegates tasks to specialized skills
 
-### 🛠️ Skills & Capabilities
+### Skills & Capabilities
 - **Web search** - Real-time information lookup
 - **Note-taking** - Create and manage notes via voice
 - **Media control** - Play music and videos
@@ -29,19 +29,19 @@ A powerful, modular voice-activated AI assistant built with Python. E.C.H.O. pro
 - **Memory** - Persistent conversation history
 - **Extensible architecture** - Easy to add custom skills
 
-### 🎨 User Interface
+### User Interface
 - **CLI mode** - Simple command-line interface
 - **System tray** - Background operation with tray icon
 - **Multiple interaction modes** - Hotkey or wake-word
 
-## 📋 Requirements
+## Requirements
 
 - Python 3.8 or higher
 - Microphone for voice input
 - Internet connection (for LLM backends)
 - Windows, macOS, or Linux
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Clone the Repository
 ```bash
@@ -96,7 +96,7 @@ python -m echo_assistant.main hotkey
 python -m echo_assistant.main cli
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 E.C.H.O/
@@ -136,7 +136,7 @@ E.C.H.O/
 └── README.md                   # This file
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Audio Settings
 
@@ -163,7 +163,7 @@ Switch between backends in `.env`:
 LLM_BACKEND=perplexity  # or 'gemini'
 ```
 
-## 🎯 Usage Examples
+## Usage Examples
 
 ### Voice Commands
 
@@ -184,22 +184,7 @@ LLM_BACKEND=perplexity  # or 'gemini'
 - "Hey Jarvis, increase volume"
 - "Hey Jarvis, lock my computer"
 
-## 🧪 Testing
-
-Test individual components:
-
-```bash
-# Test wake-word detection only
-python test_wakeword_only.py
-
-# Test full wake-word with voice response
-python test_wake_30s.py
-
-# Test Gemini API connection
-python debug_gemini_models.py
-```
-
-## 🛠️ Development
+## Development
 
 ### Adding Custom Skills
 
@@ -237,7 +222,7 @@ The project uses standard Python conventions:
 - Docstrings for all public functions
 - Modular architecture for easy maintenance
 
-## 📝 API Keys
+## API Keys
 
 ### Get Perplexity API Key
 1. Visit [Perplexity AI](https://www.perplexity.ai/)
@@ -251,7 +236,7 @@ The project uses standard Python conventions:
 3. Create a new API key
 4. Copy to your `.env` file
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Wake-word not detecting
 
@@ -283,7 +268,7 @@ print(sd.query_devices())
 ```
 - Specify device index in `audio.py` if needed
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit pull requests or open issues for:
 
@@ -292,11 +277,11 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 - Documentation improvements
 - Performance optimizations
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **openWakeWord** - Wake-word detection
 - **Faster Whisper** - Speech-to-text engine
@@ -304,7 +289,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - **Perplexity AI** - Real-time reasoning LLM
 - **Google Gemini** - Advanced multimodal AI
 
-## 📧 Contact
+## Contact
 
 **Author:** Parikshit  
 **GitHub:** [@parikshit-06](https://github.com/parikshit-06)  
@@ -312,4 +297,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**E.C.H.O.** - *Your voice, your command, your AI assistant.*
+**E.C.H.O.** - *Speak. I dare you.*
