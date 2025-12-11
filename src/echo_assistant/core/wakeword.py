@@ -42,12 +42,9 @@ class WakeWordDetector:
         models_to_load = self.target_model_names.copy() if self.target_model_names else None
         self.model = Model(
             wakeword_models=models_to_load,
-            # you can add vad_threshold here later if needed
         )
 
-        # openWakeWord expects 16 kHz, 16-bit mono PCM
         self.sample_rate = 16_000
-        # Use 80 ms frames -> 1280 samples
         self.frame_length = int(self.sample_rate * 0.08)
         
         # Score smoothing: keep a rolling window of scores per model
@@ -68,7 +65,6 @@ class WakeWordDetector:
         
         self.score_history[name].append(float(score))
         
-        # Keep only the last N frames
         if len(self.score_history[name]) > self.config.smoothing_window:
             self.score_history[name].pop(0)
         
@@ -160,10 +156,10 @@ class WakeWordDetector:
                         if should_trigger:
                             if name in self.score_history and self.score_history[name]:
                                 max_recent = max(self.score_history[name][-3:]) if len(self.score_history[name]) >= 3 else 0
-                                print(f"[WakeWord] ⚠️  TRIGGER: '{name}', max={max_recent:.3f}, in_models={is_in_models}, targets={self.target_model_names}")
+                                print(f"[WakeWord] TRIGGER: '{name}', max={max_recent:.3f}, in_models={is_in_models}, targets={self.target_model_names}")
                         
                         if should_trigger and is_in_models:
-                            print(f"[WakeWord] ✅ DETECTED '{name}' with smoothed score {smoothed_score:.3f}")
+                            print(f"[WakeWord] DETECTED '{name}' with smoothed score {smoothed_score:.3f}")
                             on_detect()
                             # After a wake, clear the history to avoid re-triggering
                             self.score_history[name] = []
