@@ -27,19 +27,21 @@ class WakeWordConfig:
 
 class WakeWordDetector:
     def __init__(self, config: WakeWordConfig) -> None:
-        # Store original model names BEFORE passing to Model()
-        # because Model() might modify them
-        self.original_model_names = config.model_names.copy() if config.model_names else None
+        # Store the original model names that user provided
+        # These will be simple names like "hey jarvis"
+        # CRITICAL: Save this BEFORE creating Model(), and pass a COPY to Model()
+        # because Model() modifies the list in-place to full file paths
+        self.target_model_names = config.model_names.copy() if config.model_names else None
         self.config = config
-        # Override config.model_names with original names to ensure consistent comparison
-        self.config.model_names = self.original_model_names
 
         # One-time download of pre-trained models (no account needed)
         openwakeword.utils.download_models()
 
         # Load specified models, or all if None
+        # Pass a COPY so Model() doesn't modify our target_model_names
+        models_to_load = self.target_model_names.copy() if self.target_model_names else None
         self.model = Model(
-            wakeword_models=self.original_model_names or None,
+            wakeword_models=models_to_load,
             # you can add vad_threshold here later if needed
         )
 
@@ -54,7 +56,7 @@ class WakeWordDetector:
 
         print(
             f"[WakeWord] Using openWakeWord models: "
-            f"{self.original_model_names or 'ALL'}; threshold={self.config.threshold}"
+            f"{self.target_model_names or 'ALL'}; threshold={self.config.threshold}"
         )
     
     def _smooth_score(self, name: str, score: float) -> float:
@@ -153,10 +155,10 @@ class WakeWordDetector:
                         
                         # Check if this model name should be accepted
                         # The 'name' from predictions will be like "hey jarvis" (the model key)
-                        # config.model_names will also be like ["hey jarvis"]
-                        if self.config.model_names:
+                        # Use target_model_names for comparison (our saved copy)
+                        if self.target_model_names:
                             # If specific models configured, only trigger on those
-                            is_in_models = name in self.config.model_names
+                            is_in_models = name in self.target_model_names
                         else:
                             # If no specific models configured, accept any
                             is_in_models = True
@@ -165,10 +167,10 @@ class WakeWordDetector:
                         if should_trigger:
                             if name in self.score_history and self.score_history[name]:
                                 max_recent = max(self.score_history[name][-3:]) if len(self.score_history[name]) >= 3 else 0
-                                print(f"[WakeWord] Trigger: {name}, max={max_recent:.3f}, in_models={is_in_models}, config={self.config.model_names}")
+                                print(f"[WakeWord] ⚠️  TRIGGER: '{name}', max={max_recent:.3f}, in_models={is_in_models}, targets={self.target_model_names}")
                         
                         if should_trigger and is_in_models:
-                            print(f"[WakeWord] DETECTED '{name}' with smoothed score {smoothed_score:.3f}")
+                            print(f"[WakeWord] ✅ DETECTED '{name}' with smoothed score {smoothed_score:.3f}")
                             on_detect()
                             # After a wake, clear the history to avoid re-triggering
                             self.score_history[name] = []
