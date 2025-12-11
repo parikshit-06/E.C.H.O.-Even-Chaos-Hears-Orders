@@ -8,17 +8,21 @@ from __future__ import annotations
 import keyboard
 from ..config import Config
 from .loop import build_components
+from ..ui.notify import show_popup
 
 
 def run_hotkey_listener(config: Config):
     recorder, stt_engine, tts_engine, router = build_components(config)
 
     print(f"[Hotkey] Assistant running. Press {config.hotkey} to speak. Say 'exit assistant' to quit.")
-    tts_engine.speak(f"{config.assistant_name} is active. Press {config.hotkey} to talk.")
+    if config.response_mode.lower() == "popup":
+        show_popup("E.C.H.O.", f"{config.assistant_name} is active. Press {config.hotkey} to talk.")
+    else:
+        tts_engine.speak(f"{config.assistant_name} is active. Press {config.hotkey} to talk.")
 
     def on_hotkey():
         print("\n[Hotkey] Listening...")
-        audio = recorder.record(seconds=4.0)   # adjustable later
+        audio = recorder.record(seconds=5.0)   # adjustable later
         text, _ = stt_engine.transcribe(audio)
 
         if not text.strip():
@@ -26,10 +30,21 @@ def run_hotkey_listener(config: Config):
             return
 
         result = router.route(text)
-        tts_engine.speak(result.reply)
+
+        if result.kind == "chat":
+            if config.response_mode.lower() == "popup":
+                show_popup("E.C.H.O.", result.reply)
+            else:
+                tts_engine.speak(result.reply)
+        else:
+            # control commands: run silently
+            pass
 
         if result.should_exit:
-            tts_engine.speak("Goodbye.")
+            if config.response_mode.lower() == "popup":
+                show_popup("E.C.H.O.", "Goodbye.")
+            else:
+                tts_engine.speak("Goodbye.")
             raise SystemExit
 
     keyboard.add_hotkey(config.hotkey, on_hotkey)

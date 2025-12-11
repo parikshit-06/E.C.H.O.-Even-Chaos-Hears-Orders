@@ -14,6 +14,7 @@ from __future__ import annotations
 from typing import Optional
 
 from ..config import Config
+from ..ui.notify import show_popup
 from ..core.audio import AudioConfig, AudioRecorder
 from ..core.stt import STTConfig, STTEngine
 from ..core.tts import TTSConfig, TTSEngine
@@ -70,10 +71,14 @@ def run_basic_voice_loop(config: Optional[Config] = None) -> None:
     cfg = config or load_config()
     recorder, stt_engine, tts_engine, router = build_components(cfg)
 
-    tts_engine.speak(
+    intro = (
         f"{cfg.assistant_name} voice loop started. "
         "Say something after the tone. Say 'exit assistant' to stop."
     )
+    if cfg.response_mode.lower() == "popup":
+        show_popup("E.C.H.O.", intro)
+    else:
+        tts_engine.speak(intro)
 
     while True:
         print("\n[Loop] Recording 4 seconds. Speak now...")
@@ -82,7 +87,10 @@ def run_basic_voice_loop(config: Optional[Config] = None) -> None:
         text, _score = stt_engine.transcribe(audio)
         if not text.strip():
             print("[Loop] No speech detected.")
-            tts_engine.speak("I did not catch that. Please try again.")
+            if cfg.response_mode.lower() == "popup":
+                show_popup("E.C.H.O.", "I did not catch that. Please try again.")
+            else:
+                tts_engine.speak("I did not catch that. Please try again.")
             continue
 
         print(f"[Loop] You said: {text!r}")
@@ -90,9 +98,20 @@ def run_basic_voice_loop(config: Optional[Config] = None) -> None:
         result = router.route(text)
         print(f"[Loop] Assistant reply: {result.reply!r}")
 
-        tts_engine.speak(result.reply)
+        if result.kind == "chat":
+            if cfg.response_mode.lower() == "popup":
+                show_popup("E.C.H.O.", result.reply)
+            else:
+                tts_engine.speak(result.reply)
+        else:
+            # control commands: silent
+            pass
 
         if result.should_exit:
+            if cfg.response_mode.lower() == "popup":
+                show_popup("E.C.H.O.", "Goodbye.")
+            else:
+                tts_engine.speak("Goodbye.")
             break
 
     print("[Loop] Exiting voice loop.")

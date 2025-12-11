@@ -12,6 +12,7 @@ class Config:
     stt_backend: str = "whisper_local"
     tts_backend: str = "pyttsx3"
     llm_backend: str = os.getenv("LLM_BACKEND", "perplexity")
+    response_mode: str = os.getenv("RESPONSE_MODE", "voice")
 
     # API keys
     perplexity_api_key: str = os.getenv("PERPLEXITY_API_KEY", "")

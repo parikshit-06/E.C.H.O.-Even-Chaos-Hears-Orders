@@ -110,6 +110,17 @@ python run_background.py
 
 *Built-in defaults:* If you add `images/ON.jpg` and `images/OFF.jpg` in the project root, these will be used automatically when env vars are not set.
 
+**Popup vs Voice replies**
+- Default is voice (TTS).
+- To show popup overlays instead of speaking, set:
+```bash
+# Windows PowerShell
+$env:RESPONSE_MODE="popup"
+# Linux/Mac
+RESPONSE_MODE="popup"
+```
+Control commands like "open X" will execute silently; chat replies are spoken or shown as popups.
+
 **Wake-word mode** (always listening):
 ```bash
 cd src

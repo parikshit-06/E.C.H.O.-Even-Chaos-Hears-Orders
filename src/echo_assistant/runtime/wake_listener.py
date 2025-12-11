@@ -9,6 +9,7 @@ from ..config import Config
 from .loop import build_components
 
 from ..core.wakeword import WakeWordConfig, WakeWordDetector
+from ..ui.notify import show_popup
 
 def run_wake_listener(config: Config) -> None:
     recorder, stt_engine, tts_engine, router = build_components(config)
@@ -37,10 +38,21 @@ def run_wake_listener(config: Config) -> None:
             print(f"[Wake] You said: {text!r}")
             result = router.route(text)
             print(f"[Wake] Assistant reply: {result.reply!r}")
-            tts_engine.speak(result.reply)
+
+            if result.kind == "chat":
+                if config.response_mode.lower() == "popup":
+                    show_popup("E.C.H.O.", result.reply)
+                else:
+                    tts_engine.speak(result.reply)
+            else:
+                # Control commands: perform action silently (no TTS) per request
+                pass
 
             if result.should_exit:
-                tts_engine.speak("Shutting down wake-word mode. Goodbye.")
+                if config.response_mode.lower() != "popup":
+                    tts_engine.speak("Shutting down wake-word mode. Goodbye.")
+                else:
+                    show_popup("E.C.H.O.", "Shutting down wake-word mode. Goodbye.")
                 should_exit = True
         except Exception as e:
             print(f"[Wake] Error in on_wake callback: {e}")
