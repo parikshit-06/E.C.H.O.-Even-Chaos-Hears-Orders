@@ -81,20 +81,54 @@ WAKEWORD_KEYWORD=hey jarvis
 
 ### 4. Run the Assistant
 
+**Background mode** (system tray, always on):
+```bash
+# Windows: Double-click start_background.bat
+# Or run directly:
+python run_background.py
+```
+*Use a custom tray icon:*
+```bash
+# Windows (PowerShell)
+$env:ECHO_TRAY_ICON="C:\\path\\to\\icon.png"; python run_background.py
+
+# Linux/Mac
+ECHO_TRAY_ICON="/path/to/icon.png" python run_background.py
+```
+*Use separate icons for on/off:*
+```bash
+# Windows (PowerShell)
+$env:ECHO_TRAY_ICON_ON="C:\\path\\to\\listening.png"
+$env:ECHO_TRAY_ICON_OFF="C:\\path\\to\\paused.png"
+python run_background.py
+
+# Linux/Mac
+ECHO_TRAY_ICON_ON="/path/to/listening.png" \
+ECHO_TRAY_ICON_OFF="/path/to/paused.png" \
+python run_background.py
+```
+
+*Built-in defaults:* If you add `images/ON.jpg` and `images/OFF.jpg` in the project root, these will be used automatically when env vars are not set.
+
 **Wake-word mode** (always listening):
 ```bash
+cd src
 python -m echo_assistant.main wake
 ```
 
 **Hotkey mode** (press Ctrl+Space):
 ```bash
+cd src
 python -m echo_assistant.main hotkey
 ```
 
 **CLI mode** (type to interact):
 ```bash
+cd src
 python -m echo_assistant.main cli
 ```
+
+> **💡 Recommended:** Use **background mode** for the best experience! It runs silently with a system tray icon. See [BACKGROUND_SERVICE.md](BACKGROUND_SERVICE.md) for details.
 
 ## Project Structure
 
