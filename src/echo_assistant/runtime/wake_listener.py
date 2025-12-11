@@ -7,14 +7,12 @@ from __future__ import annotations
 
 from ..config import Config
 from .loop import build_components
-# src/echo_assistant/runtime/wake_listener.py
 
 from ..core.wakeword import WakeWordConfig, WakeWordDetector
 
 def run_wake_listener(config: Config) -> None:
     recorder, stt_engine, tts_engine, router = build_components(config)
 
-    # Use actual openWakeWord model names without version suffix
     # Available models: "hey jarvis", "alexa", "computer", "jarvis", etc.
     wake_models = ["hey jarvis"]
 

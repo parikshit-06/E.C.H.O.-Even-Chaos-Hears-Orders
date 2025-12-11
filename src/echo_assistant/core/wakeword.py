@@ -96,7 +96,6 @@ class WakeWordDetector:
         cond1 = smoothed_score >= self.config.threshold
         cond2 = max_recent >= (self.config.threshold * 2.5)
         
-        # Debug: log every evaluation for this model
         if max_recent > 0.05:  # Only log when there's actually a signal
             print(f"[WakeWord DEBUG] {name}: smoothed={smoothed_score:.4f}, max_recent={max_recent:.4f}, "
                   f"threshold={self.config.threshold}, peak_thresh={self.config.threshold * 2.5:.4f}, "
@@ -132,10 +131,8 @@ class WakeWordDetector:
                     if not frame:
                         continue
 
-                    # int16 PCM -> numpy
                     audio = np.frombuffer(frame, dtype=np.int16)
 
-                    # prediction is a dict: {"hey jarvis": score, ...}
                     preds = self.model.predict(audio)
 
                     # Apply smoothing to each score
@@ -143,7 +140,6 @@ class WakeWordDetector:
                     for name, score in preds.items():
                         smoothed_preds[name] = self._smooth_score(name, score)
 
-                    # Debug output every 10 frames (80ms * 10 = 800ms)
                     frame_count += 1
                     if frame_count % 10 == 0:
                         print(f"[WakeWord] Raw scores: {preds}")
@@ -153,9 +149,6 @@ class WakeWordDetector:
                     for name, smoothed_score in smoothed_preds.items():
                         should_trigger = self._should_trigger(name, smoothed_score)
                         
-                        # Check if this model name should be accepted
-                        # The 'name' from predictions will be like "hey jarvis" (the model key)
-                        # Use target_model_names for comparison (our saved copy)
                         if self.target_model_names:
                             # If specific models configured, only trigger on those
                             is_in_models = name in self.target_model_names
