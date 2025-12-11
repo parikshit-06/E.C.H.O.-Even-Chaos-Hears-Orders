@@ -12,8 +12,8 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM Start in background (no console window after initial launch)
-start /B pythonw run_background.py
+REM Start in background detached from this window
+start "ECHO" /MIN pythonw run_background.py
 
 echo E.C.H.O. Assistant started in background!
 echo Check your system tray for the icon.

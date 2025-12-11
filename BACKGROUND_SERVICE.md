@@ -73,13 +73,18 @@ These are needed for the system tray icon functionality.
 ## Auto-Start on Boot
 
 ### Windows (Task Scheduler)
+**Quick method (script):** Double-click `register_autostart.bat` (runs `schtasks` to register at logon).
+
+**Manual method:**
 1. Press `Win + R`, type `taskschd.msc`, press Enter
 2. Click "Create Basic Task"
 3. Name: "E.C.H.O. Assistant"
 4. Trigger: "When I log on"
 5. Action: "Start a program"
-6. Program: `C:\Path\To\E.C.H.O\start_background.bat`
-7. Finish and enable the task
+6. Program: `pythonw`
+7. Arguments: `C:\Path\To\E.C.H.O\run_background.py`
+8. Start in: `C:\Path\To\E.C.H.O\`
+9. Finish, then right-click task → Properties → General → check "Run whether user is logged on or not"
 
 ### Linux (systemd)
 Create `~/.config/systemd/user/echo-assistant.service`:
