@@ -29,6 +29,7 @@ APPS = {
     "paint": "mspaint",
     "camera": "microsoft.windows.camera:",
     "settings": "ms-settings:",
+    "netflix": "netflix",
 
     # Websites
     "youtube": "https://www.youtube.com",
